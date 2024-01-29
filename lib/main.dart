@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:quizapp/quizbrain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(Quizzler());
 
 class Quizzler extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,13 +28,20 @@ class Quizpage extends StatefulWidget {
 }
 
 class _QuizpageState extends State<Quizpage> {
-
   List <Widget> scoreKeeper = [];
+/*
   List <String> questions = [
-    'You can lead a cow down stairs but not up stairs.',
+    ,
     'Approximately one quarter of human bones are in the feet.',
     'A slug\'s blood is green.'
   ];
+  List<bool> answers = [
+    false,
+    true,
+    true
+  ];*/
+
+
   int questionNo = 0;
   @override
   Widget build(BuildContext context) {
@@ -46,7 +55,7 @@ class _QuizpageState extends State<Quizpage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questions[questionNo],
+                quizBrain.questionbank[questionNo].questionText ?? 'no question available',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -57,45 +66,52 @@ class _QuizpageState extends State<Quizpage> {
           ),
         ),
         Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.green),
-              child: Text(
-                'True',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
-                ),
-              ),
-              onPressed: (){
-                setState(() {
-                  questionNo++;
-                });
-              },
+            child: Padding(
+          padding: EdgeInsets.all(15.0),
+          child: TextButton(
+            style: TextButton.styleFrom(backgroundColor: Colors.green),
+            child: Text(
+              'True',
+              style: TextStyle(color: Colors.white, fontSize: 20.0),
             ),
-          )
-        ),
+            onPressed: () {
+              setState(() {
+                bool correctAnswer = quizBrain.questionbank[questionNo].questionAnswer ?? false;
+
+                if (correctAnswer == true) {
+                  print('user got it right');
+                } else {
+                  print('user got it wrong');
+                }
+
+                questionNo++;
+              });
+            },
+          ),
+        )),
         Expanded(
             child: Padding(
-              padding: EdgeInsets.all(15.0),
-              child: TextButton(
-                style: TextButton.styleFrom(backgroundColor: Colors.red),
-                child: Text(
-                  'False',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0
-                  ),
-                ),
-                onPressed: (){
-                  setState(() {
-                    questionNo++;
-                  });
-                },
-              ),
-            )
-        ),
+          padding: EdgeInsets.all(15.0),
+          child: TextButton(
+            style: TextButton.styleFrom(backgroundColor: Colors.red),
+            child: Text(
+              'False',
+              style: TextStyle(color: Colors.white, fontSize: 20.0),
+            ),
+            onPressed: () {
+              bool correctAnswer = quizBrain.questionbank[questionNo].questionAnswer ?? false;
+
+              if (correctAnswer == false) {
+                print('user got it right');
+              } else {
+                print('user got it wrong');
+              }
+              setState(() {
+                questionNo++;
+              });
+            },
+          ),
+        )),
         Row(
           children: scoreKeeper,
         )
@@ -103,4 +119,3 @@ class _QuizpageState extends State<Quizpage> {
     );
   }
 }
-
